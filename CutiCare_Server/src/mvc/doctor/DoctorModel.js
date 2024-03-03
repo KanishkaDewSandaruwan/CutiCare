@@ -36,7 +36,7 @@ const DoctorModel = {
             const { doctor_name, specialty, phonenumber } = doctor;
             const trndate = new Date().toISOString().slice(0, 19).replace('T', ' ');
             const defaultValues = 0;
-            const activeValues = 1;
+            const activeValues = 1; 
 
             const query = 'INSERT INTO doctor (doctor_name, specialty, phonenumber, profileimage, trndate, doctor_status, is_delete) VALUES (?, ?, ?, ?, ?, ?, ?)';
             const values = [doctor_name, specialty, phonenumber, filePath, trndate, activeValues, defaultValues];
