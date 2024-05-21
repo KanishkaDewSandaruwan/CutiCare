@@ -1,6 +1,7 @@
 const express = require('express');
 const userRoute = require('./user/user');
 const DoctorRoute = require('./doctor/doctor');
+const MainRoute = require('./main/main');
 const HospitalRoute = require('./hospital/hospital');
 const DoctorAssign = require('./doctor_assign/doctorAssign');
 
@@ -9,7 +10,8 @@ module.exports = (config) => {
 
   //access control routes
   router.use('/user', userRoute(config)); //admin user only
-  router.use('/doctor', DoctorRoute(config));
+  router.use('/doctor', DoctorRoute(config)); 
+  router.use('/mainn', MainRoute(config)); 
   // router.use('/hospital', HospitalRoute(config));
   // router.use('/doctor_assign', DoctorAssign(config));
 
