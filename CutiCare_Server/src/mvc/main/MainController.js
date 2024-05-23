@@ -1,26 +1,24 @@
-const MainModel = require("./MainModel");
+import { loadLayersModel, node, image } from '@tensorflow/tfjs-node';
+import { readFileSync } from 'fs';
+import path from 'path';
+
+// Load the model
+let model;
 
 (async () => {
-    model = await tf.loadLayersModel('../../../config/model.json');
+    model = await loadLayersModel('../../../config/model.json');
 })();
 
-const checkRash = async (req, res) => {
-    try {
-        const imageBuffer = req.file.buffer;
-        const imageTensor = tf.node.decodeImage(imageBuffer);
-        const resizedImage = tf.image.resizeBilinear(imageTensor, [224, 224]);
-        const normalizedImage = resizedImage.div(255.0).expandDims(0);
+const classifyImage = async (imagePath) => {
+    const imageBuffer = readFileSync(imagePath);
+    const imageTensor = node.decodeImage(imageBuffer, 3);
+    const resizedImage = image.resizeBilinear(imageTensor, [224, 224]);
+    const normalizedImage = resizedImage.div(255.0).expandDims(0);
 
-        const prediction = model.predict(normalizedImage);
-        const isRash = (await prediction.data())[0] > 0.5;
+    const prediction = model.predict(normalizedImage);
+    const isRash = (await prediction.data())[0] > 0.5;
 
-        res.status(200).send({ message: 'Checking is Success', isRash });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: 'Error fetching data from the database' });
-    }
+    return isRash;
 };
 
-module.exports = {
-    checkRash
-}
+export default { classifyImage };
